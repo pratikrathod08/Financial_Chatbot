@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+langchain
+langchain-openai
+openai
+pypdf
+pypdf2
+python-docx
+matplotlib
+pandas
+openpyxl
+
+
+-e .
