@@ -8,5 +8,5 @@ app = FastAPI(
     version="1.0.0"
 )
 logger.info("Started application loggind")
-app.include_router(chat.router, prefix="/file", tags=['files'])
-app.include_router(file.router, prefix="/chat", tags=['Queries'])
+app.include_router(chat.router, prefix="/chat", tags=['files'])
+app.include_router(file.router, prefix="/file", tags=['Queries'])

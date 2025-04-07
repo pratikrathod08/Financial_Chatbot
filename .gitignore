@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+
+## Additional packages 
+venv1
+logs
+research
