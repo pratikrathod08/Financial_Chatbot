@@ -1,0 +1,52 @@
+import os, sys
+import sqlite3
+import pandas as pd
+from app.components.data_extraction import DataExtractor
+from app.components.vectorstore import VectorStore
+from app.database.database import get_db_connection
+
+# data_extractor = DataExtractor()
+
+# {
+#         "original_filename": filename,
+#         "stored_as": new_filename,
+#         "file_type": file_type,
+#         "path": file_path
+#     }
+
+class DataIngestion(DataExtractor, VectorStore):
+    def __init__(self):
+        self.data_extractor=DataExtractor()
+        self.vectorstore=VectorStore()
+
+    def store_csv_excel_to_sqlite(self, df: pd.DataFrame, table_name: str):
+        with get_db_connection() as conn:
+            df.to_sql(table_name, conn, if_exists="replace", index=False)
+            return True
+
+    def data_ingestion(self, filedata: dict):
+        filetype = filedata.get("file_type") 
+        filepath = filedata.get("path")
+        filename = filedata.get("original_filename")
+        if filetype in ["txt", "docx", "pdf"]:
+            text = self.data_extractor.extract_text(filepath)
+            result = self.vectorstore.add_to_vectorstore(text, filename)
+            return result
+        elif filetype in ['xlsx', "csv"]:
+            df = self.data_extractor.extract_df(filepath)
+            result = self.store_csv_excel_to_sqlite(df, filename.split(".")[0])
+            return result
+
+# def run_sql_query(query: str, db_path="data.db"):
+#     conn = sqlite3.connect(db_path)
+#     cursor = conn.cursor()
+#     cursor.execute(query)
+#     result = cursor.fetchall()
+#     conn.close()
+#     return result
+
+# llm_generated_sql = generate_sql_from_prompt(user_input, table_schema)
+
+# answer = run_sql_query(llm_generated_sql)
+
+

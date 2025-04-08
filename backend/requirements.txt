@@ -14,6 +14,9 @@ openpyxl
 python-dotenv
 streamlit
 pydantic-settings
+faiss-cpu
+sentence_transformers
+langchain_community
 
 
 -e .

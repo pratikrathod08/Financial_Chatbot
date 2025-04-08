@@ -1,29 +1,33 @@
-import os, sys 
-import pandas as pd 
-import PyPDF2
-import docx
+from app.database.database import get_db_connection
+
+def run_sql_query(query: str):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+    return result
 
 
-def read_pdf(path):
-    text = ""
-    with open(path, "rb") as f:
-        reader = PyPDF2.PdfReader(f)
-        for page in reader.pages:
-            text += page.extract_text() or ""
-    return text
+def get_db_schema():
+    schema = {}
 
-def read_docx(path):
-    doc = docx.Document(path)
-    return "\n".join([p.text for p in doc.paragraphs])
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
 
-def read_csv(path):
-    df = pd.read_csv(path)
-    return df.to_string()
+        # Get all table names
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
 
-def read_excel(path):
-    df = pd.read_excel(path)
-    return df.to_string()
+        for table_name_tuple in tables:
+            table_name = table_name_tuple[0]
 
-def read_txt(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+            # Get column info for each table
+            cursor.execute(f"PRAGMA table_info({table_name});")
+            columns = cursor.fetchall()
+
+            # Extract column name and type
+            schema[table_name] = [
+                {"name": col[1], "type": col[2]} for col in columns
+            ]
+
+    return schema
