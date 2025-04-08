@@ -12,21 +12,21 @@ st.title("💼 Financial Intelligence Chatbot")
 st.header("📂 Upload Files")
 uploaded_files = st.file_uploader(
     "Upload multiple files (PDF, Excel, Word, CSV, etc.)",
-    type=["pdf", "docx", "doc", "csv", "xlsx", "xls", "txt"],
+    type=["pdf", "docx", "doc", "csv", "xlsx", "txt"],
     accept_multiple_files=True
 )
 
 if st.button("Upload Files") and uploaded_files:
-    for file in uploaded_files:
-        with st.spinner(f"Uploading {file.name}..."):
-            response = requests.post(
-                f"{BACKEND_URL}/file/upload/",  # your API route
-                files={"file": (file.name, file, file.type)}
-            )
-            if response.status_code == 200:
-                st.success(f"{file.name} uploaded successfully!")
-            else:
-                st.error(f"Failed to upload {file.name}")
+    file_tuples = [("files", (file.name, file, file.type)) for file in uploaded_files]
+    with st.spinner("Uploading files..."):
+        response = requests.post(
+            f"{BACKEND_URL}/file/upload/",
+            files=file_tuples
+        )
+        if response.status_code == 200:
+            st.success("All files uploaded successfully!")
+        else:
+            st.error("Failed to upload files.")
 
 # Chat Section
 st.header("🗣️ Ask Your Questions")
@@ -38,7 +38,7 @@ if st.button("Ask") and query:
             f"{BACKEND_URL}/chat/ask/", json={"query": query}
         )
         if response.status_code == 200:
-            answer = response.json().get("answer", "No response")
-            st.success(answer)
+            # answer = response.json().get("answer", "No response")
+            st.success(response.json().get("Result", "No response"))
         else:
             st.error("Failed to get a response from the chatbot")
