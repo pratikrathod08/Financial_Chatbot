@@ -19,10 +19,12 @@ uploaded_files = st.file_uploader(
 if st.button("Upload Files") and uploaded_files:
     file_tuples = [("files", (file.name, file, file.type)) for file in uploaded_files]
     with st.spinner("Uploading files..."):
+        print("File uploading started.")
         response = requests.post(
             f"{BACKEND_URL}/file/upload/",
             files=file_tuples
         )
+        print(response.text)
         if response.status_code == 200:
             st.success("All files uploaded successfully!")
         else:

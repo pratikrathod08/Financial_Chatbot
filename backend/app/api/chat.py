@@ -18,9 +18,9 @@ load_dotenv()
 router = APIRouter()
 
 @router.post("/ask/")
-async def ask_files(query: AskRequest):
+async def ask_files(request: AskRequest):
     vectordb=VectorStore()
-    results = vectordb.search_similar(query)
+    results = vectordb.search_similar(request.query)
     response_data = [doc.page_content for doc in results]
     print("This is response data : ", response_data)
     return {"Result": response_data}

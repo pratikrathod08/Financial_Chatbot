@@ -5,6 +5,9 @@ from datetime import datetime
 import shutil
 from dotenv import load_dotenv
 
+from app.logger import logger
+
+
 load_dotenv()
 
 UPLOAD_DIR = os.getenv("UPLOAD_DIR")
@@ -20,6 +23,7 @@ EXTENSION_MAP = {
 }
 
 async def save_file_by_type(file: UploadFile):
+    logger.info("File storage started")
     filename = file.filename
     ext = os.path.splitext(filename)[1].lower()
     file_type = EXTENSION_MAP.get(ext, 'others')
@@ -34,6 +38,14 @@ async def save_file_by_type(file: UploadFile):
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    logger.info({
+        "original_filename": filename,
+        "stored_as": new_filename,
+        "file_type": file_type,
+        "path": file_path
+    })
+    logger.info("File stored successfully")
 
     return {
         "original_filename": filename,

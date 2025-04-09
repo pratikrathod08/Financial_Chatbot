@@ -5,6 +5,8 @@ from app.components.data_extraction import DataExtractor
 from app.components.vectorstore import VectorStore
 from app.database.database import get_db_connection
 
+from app.logger import logger
+
 # data_extractor = DataExtractor()
 
 # {
@@ -15,6 +17,8 @@ from app.database.database import get_db_connection
 #     }
 
 class DataIngestion(DataExtractor, VectorStore):
+    logger.info("Data ingestion started")
+
     def __init__(self):
         self.data_extractor=DataExtractor()
         self.vectorstore=VectorStore()
@@ -22,7 +26,8 @@ class DataIngestion(DataExtractor, VectorStore):
     def store_csv_excel_to_sqlite(self, df: pd.DataFrame, table_name: str):
         with get_db_connection() as conn:
             df.to_sql(table_name, conn, if_exists="replace", index=False)
-            return True
+            logger.info("Stored csv or excel successfully")
+            
 
     def data_ingestion(self, filedata: dict):
         filetype = filedata.get("file_type") 
@@ -31,11 +36,13 @@ class DataIngestion(DataExtractor, VectorStore):
         if filetype in ["txt", "docx", "pdf"]:
             text = self.data_extractor.extract_text(filepath)
             result = self.vectorstore.add_to_vectorstore(text, filename)
-            return result
+            logger.info("pdf, docx, txt ingestion completed")
+        
         elif filetype in ['xlsx', "csv"]:
             df = self.data_extractor.extract_df(filepath)
             result = self.store_csv_excel_to_sqlite(df, filename.split(".")[0])
-            return result
+            logger.info("csv and excel ingestion completed")
+            
 
 # def run_sql_query(query: str, db_path="data.db"):
 #     conn = sqlite3.connect(db_path)
