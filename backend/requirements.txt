@@ -17,6 +17,8 @@ pydantic-settings
 faiss-cpu
 sentence_transformers
 langchain_community
-
+# sqlmodel
+mysql-connector-python
+pymysql
 
 -e .

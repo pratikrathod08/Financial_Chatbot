@@ -3,9 +3,9 @@ from app.utils.file_utils import read_txt, extract_text_from_pdf, extract_text_f
 from app.logger import logger
 
 class DataExtractor:
-
     def __init__(self):
-        pass
+        logger.info("dataextraction endpoint hit")
+        pass 
 
     logger.info("Data Extraction started")    
     def extract_text(self, file_path: str) -> str:
@@ -14,17 +14,19 @@ class DataExtractor:
             return extract_text_from_pdf(file_path)
         elif file_path.endswith(".docx"):
             return extract_text_from_docx(file_path)
-        elif file_path.endswith()(".txt"):
+        elif file_path.endswith(".txt"):
             return read_txt(file_path)
         else:
             logger.info("Unsupported file type")
             raise ValueError("Unsupported file type")
         
     def extract_df(self, file_path: str):
-        logger.info("DF Ectraction started")
+        logger.info("DF Extraction started")
         if file_path.endswith(".csv"):
+            logger.info("Returned df")
             return extract_text_from_csv(file_path)
         elif file_path.endswith(".xlsx"):
+            logger.info("Returned df")
             return extract_text_from_excel(file_path)
         else:
             logger.info("Unsupported file type")
