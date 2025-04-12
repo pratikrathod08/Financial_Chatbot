@@ -23,7 +23,7 @@ from pprint import pprint
 load_dotenv()
 
 
-tools = [lookup_vectordb, query_sqldb]
+tools = [query_sqldb, lookup_vectordb]
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, api_key="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")
 llm_with_tools = llm.bind_tools(tools)
@@ -77,44 +77,44 @@ def route_tools(
         return "tools"
     return "__end__"
 
-tool_node = BasicToolNode(tools=[lookup_vectordb, query_sqldb])
+tool_node = BasicToolNode(tools=[query_sqldb, lookup_vectordb])
 
 graph_builder = StateGraph(State)
 
 graph_builder.add_node("chatbot", chatbot)
 graph_builder.add_node("tools", tool_node)
 
-# graph_builder.add_conditional_edges(
-#     "chatbot",
-#     route_tools,
-#     {"tools": "tools", "__end__": "__end__"},
-# )
-
-# graph_builder.add_edge("tools", "chatbot")
-# graph_builder.add_edge(START, "chatbot")
-# graph = graph_builder.compile(checkpointer=memory)
-# config = {"configurable": {"thread_id": "1"}}
-
-
-## Approach 2 
-
-# Define the function that determines whether to continue or not
-def should_continue(state: MessagesState) -> Literal["tools", END]:
-    messages = state['messages']
-    last_message = messages[-1]
-    # If the LLM makes a tool call, then we route to the "tools" node
-    if last_message.tool_calls:
-        return "tools"
-    # Otherwise, we stop (reply to the user)
-    return END
-
 graph_builder.add_conditional_edges(
     "chatbot",
-    should_continue,
-    ["tools", END],
+    route_tools,
+    {"tools": "tools", "__end__": "__end__"},
 )
-# Any time a tool is called, we return to the chatbot to decide the next step
+
 graph_builder.add_edge("tools", "chatbot")
 graph_builder.add_edge(START, "chatbot")
 graph = graph_builder.compile(checkpointer=memory)
 config = {"configurable": {"thread_id": "1"}}
+
+
+## Approach 2 
+
+## Define the function that determines whether to continue or not
+# def should_continue(state: MessagesState) -> Literal["tools", END]:
+#     messages = state['messages']
+#     last_message = messages[-1]
+#     # If the LLM makes a tool call, then we route to the "tools" node
+#     if last_message.tool_calls:
+#         return "tools"
+#     # Otherwise, we stop (reply to the user)
+#     return END
+
+# graph_builder.add_conditional_edges(
+#     "chatbot",
+#     should_continue,
+#     ["tools", END],
+# )
+# # Any time a tool is called, we return to the chatbot to decide the next step
+# graph_builder.add_edge("tools", "chatbot")
+# graph_builder.add_edge(START, "chatbot")
+# graph = graph_builder.compile(checkpointer=memory)
+# config = {"configurable": {"thread_id": "1"}}

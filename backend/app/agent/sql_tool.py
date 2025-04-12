@@ -2,6 +2,7 @@ import os ,sys
 from langchain_community.utilities import SQLDatabase
 from langchain.chains import create_sql_query_chain
 from langchain_community.tools.sql_database.tool import QuerySQLDataBaseTool
+# from langchain_community.tools import QuerySQLDatabaseTool
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
@@ -94,11 +95,26 @@ class TravelSQLAgentTool:
             Answer:
             """
         self.db = SQLDatabase.from_uri(sql_uri)
+        # table_info = self.db.get_table_info()
+        # self.my_prompt = PromptTemplate.from_template(
+        #         """You are an expert SQL developer working with a travel company database.
+        #     Here is the user's question: {input}
+        #     Only use the following tables: {table_info}
+        #     you need to return top k: {top_k}
+        #     Generate a syntactically correct SQL query. Do not guess the table or column names.
+
+        #     Also try and understand query do not just focus on columns also focus on table name sometime query is related to table name as well.
+        #     """
+        #     )
+
         print(self.db.get_usable_table_names())
 
         execute_query = QuerySQLDataBaseTool(db=self.db)
         write_query = create_sql_query_chain(
-            self.sql_agent_llm, self.db)
+            llm=self.sql_agent_llm,
+            db=self.db
+            # prompt=self.my_prompt
+            )
         answer_prompt = PromptTemplate.from_template(
             self.system_role)
 
@@ -114,8 +130,8 @@ class TravelSQLAgentTool:
 def query_sqldb(query: str) -> str:
     """Query the Swiss Airline SQL Database and access all the company's information. Input should be a search query."""
     agent = TravelSQLAgentTool(
-        llm=sql_agent_llm,
-        sqldb_directory=sql_uri,
+        llm='gpt-3.5-turbo',
+        sql_uri=sql_uri,
         llm_temerature=sql_llm_temperature
     )
     response = agent.chain.invoke({"question": query})

@@ -28,8 +28,8 @@ async def ask_files(request: AskRequest):
             {"messages": [HumanMessage(content=request.query)]},
             config=config
         )
-        print(final_state)
-        final_state["messages"][-1].content
+        # print(final_state)
+        print("Final result of query : ", final_state["messages"][-1].content)
         return {"result": final_state["messages"][-1].content}
     except Exception as e:
         print(e)

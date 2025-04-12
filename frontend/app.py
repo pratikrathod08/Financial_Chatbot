@@ -41,6 +41,6 @@ if st.button("Ask") and query:
         )
         if response.status_code == 200:
             # answer = response.json().get("answer", "No response")
-            st.success(response.json().get("Result", "No response"))
+            st.success(response.json().get("result", "No response"))
         else:
             st.error("Failed to get a response from the chatbot")
