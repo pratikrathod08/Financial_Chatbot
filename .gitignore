@@ -182,3 +182,6 @@ research
 data 
 data/*
 data.db
+faiss_index
+notebooks
+

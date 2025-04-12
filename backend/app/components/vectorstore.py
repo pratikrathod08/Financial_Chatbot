@@ -5,17 +5,24 @@ import numpy as np
 import faiss
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import FakeEmbeddings
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
+from langchain_core.tools import tool
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from app.logger import logger
+from app.database.database import get_full_schema
+from app.config import ROOT_DIR
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class VectorStore:
-    logger.info("Vector store started")
-
     def __init__(self):
-        self.index_path = "faiss_index"
+        # self.index_path = os.path.abspath("../../faiss_index")
+        self.index_path = os.path.join(ROOT_DIR,"faiss_index")
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  # Or any other suitable model
 
@@ -32,13 +39,15 @@ class VectorStore:
         logger.info("Vectore loaded completed")
         return vector_store
 
+    @tool
     def search_similar(self, query: str, top_k=3):
+        """ Similarity search tool using vector database """
         try:
             vectorstore=self.load_vectorstore()
             results = vectorstore.similarity_search(query, k=top_k)
             logger.info("Similarity search done : ")
             logger.info(results)
-            return results
+            return "\n\n".join([doc.page_content for doc in results])
         except Exception as e:
             return {"error": e}
 

@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 
 from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
 # DB_PATH = os.getenv("DB_PATH")  # You can also use a full path if needed
 
@@ -30,8 +30,6 @@ from dotenv import load_dotenv
 # mysql_url = "mysql+pymysql://root:my_password@localhost:3306/my_database"
 DATABASE_URL = os.getenv("DB_URI")
 
-
-
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -50,10 +48,31 @@ Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 
 # Dependency
-# @contextmanager
+@contextmanager
 def get_db_connection():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+from sqlalchemy import inspect
+
+def get_full_schema():
+    inspector = inspect(engine)
+    schema_details = {}
+
+    for table_name in inspector.get_table_names():
+        columns = inspector.get_columns(table_name)
+        schema_details[table_name] = [
+            {
+                "name": col["name"],
+                "type": str(col["type"]),
+                "nullable": col["nullable"],
+                "default": col.get("default"),
+                "primary_key": col.get("primary_key")
+            }
+            for col in columns
+        ]
+    
+    return schema_details

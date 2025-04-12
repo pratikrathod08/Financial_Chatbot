@@ -20,5 +20,8 @@ langchain_community
 # sqlmodel
 mysql-connector-python
 pymysql
+langchain_experimental
+langchain-huggingface
+langgraph
 
 -e .
