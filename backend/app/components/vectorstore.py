@@ -1,11 +1,8 @@
 import os, sys
-from sentence_transformers import SentenceTransformer
 from PyPDF2 import PdfReader
 import numpy as np
 import faiss
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import FakeEmbeddings
-# from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_core.tools import tool
@@ -21,10 +18,9 @@ load_dotenv()
 
 class VectorStore:
     def __init__(self):
-        # self.index_path = os.path.abspath("../../faiss_index")
         self.index_path = os.path.join(ROOT_DIR,"faiss_index")
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  # Or any other suitable model
+        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  
 
     def add_to_vectorstore(self, text: str, collection_name: str):
         docs = self.text_splitter.split_text(text)

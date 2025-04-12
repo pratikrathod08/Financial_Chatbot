@@ -5,7 +5,6 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.tools import tool
 from app.config import ROOT_DIR
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pprint import pprint
 load_dotenv()

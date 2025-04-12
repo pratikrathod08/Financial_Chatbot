@@ -15,7 +15,7 @@ app = FastAPI(
     title="Financial Intelligence Chatbot",
     version="1.0.0"
 )
-logger.info("Started application loggind")
+logger.info("Application Started")
 
 app.include_router(chat.router, prefix="/chat", tags=['files'])
 app.include_router(file.router, prefix="/file", tags=['Queries'])

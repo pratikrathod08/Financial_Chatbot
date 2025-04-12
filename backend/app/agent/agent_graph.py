@@ -1,18 +1,12 @@
 import os, sys
 import json
-from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.tools import tool
-from app.config import ROOT_DIR
 from langchain_openai import ChatOpenAI
 from typing import Annotated, Literal
 from typing_extensions import TypedDict
-from langgraph.graph import StateGraph, START
+from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.graph.message import add_messages
 from langchain_core.messages import ToolMessage, HumanMessage 
-from langgraph.graph import END, MessagesState
 from langgraph.checkpoint.memory import MemorySaver
 
 from app.agent.sql_tool import query_sqldb 

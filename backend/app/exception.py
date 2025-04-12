@@ -25,8 +25,8 @@ class CustomException(Exception):
 if __name__ == "__main__":
     logger.info("logging has started")
 
-    try:
-        a = 1/0
-    except Exception as e:
-        logger.info("Division by zero")
-        raise CustomException(e,sys)
+    # try:
+    #     a = 1/0
+    # except Exception as e:
+    #     logger.info("Division by zero")
+    #     raise CustomException(e,sys)

@@ -5,16 +5,12 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 
-
 from dotenv import load_dotenv
-
 from app.database.database import engine
-
-
 load_dotenv()
 
-model = ChatOpenAI()
 
+model = ChatOpenAI()
 
 def get_all_tables_and_schemas():
     

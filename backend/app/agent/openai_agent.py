@@ -14,5 +14,5 @@ agent = initialize_agent(
     verbose=True,
 )
 
-response = agent.run("give me average age of car buyers")
-print(response)
+# response = agent.run("give me average age of car buyers")
+# print(response)

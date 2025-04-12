@@ -1,4 +1,3 @@
-# app/components/file_handler.py
 import os
 from fastapi import UploadFile
 from datetime import datetime
