@@ -28,8 +28,7 @@ async def upload_file(
             for file in results:
                 data_ingestion_class.data_ingestion(file)
             logger.info("Data ingestion completed of all files: ")
-            return {"status": "success"}
-        elif url:
+        if url:
             logger.info("Url uploaded from frontend")
             data_ingestion_class = DataIngestion()
             results = await save_url_files(url)
@@ -37,10 +36,8 @@ async def upload_file(
             for file in results:
                 data_ingestion_class.data_ingestion(file)
             logger.info("Data ingestion completed of all files: ")
-            return {"status": "success"}
-        else:
-            return {"error": "No files or URL provided"}
-
+        return {"status": "success"}
+        
     except Exception as e:
         logger.info(f"Exception occure during upload route store data : {str(e)}")
         return{"error": e}
