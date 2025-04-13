@@ -19,12 +19,12 @@ async def upload_file(files: List[UploadFile] = File(...)):
         for file in files:
             result = await save_file_by_type(file)
             results.append(result)
-        logger.info("file storage completed : ")
-        logger.info(results)
+        logger.info("file storage completed ")
+        logger.info(f"Results stored : {str(results)}")
         for file in results:
             data_ingestion_class.data_ingestion(file)
             logger.info("Data ingestion completed of all files: ")
         return {"status": "success"}
     except Exception as e:
-        print(e)
+        logger.info(f"Exception occure during upload route store data : {str(e)}")
         return{"error": e}
