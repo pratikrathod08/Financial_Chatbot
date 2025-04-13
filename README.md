@@ -1,5 +1,66 @@
 # Financial_Chatbot
 
+## 🔧 Prerequisites
+
+- Python >= 3.10
+- Git
+- Virtualenv
+- OpenAI API Key
+- PostgreSQL or MySQL setup (for SQL storage)
+
+## 🚀 Techstack 
+
+**🐍 Backend** 
+1. Python >= 3.10
+2. FastAPI – Web framework for building APIs
+3. LangChain – Framework for developing LLM-powered applications
+4. OpenAI API – For LLM-based response generation
+5. FAISS – Vector database for semantic search and document similarity
+6. PostgreSQL / MySQL – For structured data storage (SQL)
+7. SQLAlchemy – ORM for SQL database integration
+8. Pydantic – For data validation
+9. Uvicorn – ASGI server to run FastAPI apps
+10. python-dotenv – To manage environment variables from .env
+11. pandas / openpyxl – For processing CSV and Excel files
+12. logging – For system logging
+
+**📊 Data Handling**
+1. PDF / Text / CSV / Excel – Document types supported for ingestion
+2. BeautifulSoup / Requests – For scraping and extracting data from URLs
+3. Custom tools for:
+`Vector DB Tool`
+`SQL DB Tool`
+`Agent-based routing between tools`
+
+**🤖 Agent Architecture**
+1. LangChain Agents – Handle complex queries by dynamically choosing the right tool (SQL / Vector search)
+2. Custom Tools – Integrated tools for SQL + VectorDB
+3. LangSmith (Optional) – For tracing and debugging agent runs
+
+    ![Agent Architecture](backend/docs/agent_architecture.png)
+
+**🌐 Frontend**
+1. Streamlit – Interactive UI for uploading documents and chatting with data
+
+**🔐 Environment Variables (.env)**
+1. OPENAI_API_KEY – OpenAI access
+2. LANGSMITH_API_KEY – (Optional) for LangSmith observability
+3. DB_URI – SQL Database URI (postgresql+psycopg2://... or mysql+mysqlconnector://...)
+4. DB_PATH – Path for vector DB
+5. UPLOAD_DIR – Upload and storage path for documents
+
+
+## ✨ Features
+
+- Upload documents (PDF, TXT, CSV, Excel, URL)
+- Extract and store data in SQL and Vector DB
+- Ask questions from uploaded or extracted data
+- Agent architecture to choose between SQL or Vector search
+- Web UI built with Streamlit
+
+
+## How to use 
+
 - **Clone github repository for get full project source code `https://github.com/pratikrathod08/Financial_Chatbot.git`**
 
 - **Clone via git or download zip and store to local folder.** 
@@ -25,7 +86,7 @@ venv\scripts\activate  ## For windows
 source venv/bin/activate  ## For linux
 ```
 
-## Install requiremts and create packages 
+## Install requirements 
 
 ```bash 
 pip install -r requirements.txt
@@ -47,7 +108,7 @@ cd frontend  ## Go to frontend folder
 ```
 
 ```bash  
-python -m venv venv1  ## For install frontend lib like streamlit if using node or other tech it id not required
+python -m venv venv1  ## Install frontend lib like streamlit 
 ```
 
 ```bash 
@@ -88,17 +149,28 @@ uvicorn app.main:app --reload  ## Your app will run on localhost:8000 port
 - **Go to frontend folder and run application**
 `Make sure to activate virtual environment before run application`
 ```bash 
-streamlit run app.py  ## You will get fronend url from terminal after run app 
+streamlit run app.py  ## You will get frontend url from terminal after run app 
 ```
 
-- **Go to fronend url and browse your files and upload you will get success message after successfully upload all files.** 
+- **Go to the frontend url and browse your files and upload you will get success message after successfully upload all files.** 
 
 - **Ask your question from uploaded data.** 
 
 - **Check logs for uploaded files and chat history from `UPLOAD_DIR=app/data/uploads` this path.**
 - **Also check logs for error and success from log folder inside backend folder.**
 
-### Test with sample files and url  
+### Test with sample files and url 
+
+- **sample pdf and csv file**
+`backend/docs/sampledata` 
 
 - **sample url**
-`https://en.wikipedia.org/wiki/List_of_largest_daily_changes_in_the_Dow_Jones_Industrial_Average`
+
+`https://www.nse.co.ke/dataservices/market-statistics/`
+
+## 📄 License
+
+
+## 👨‍💻 Author
+
+- **Pratik Rathod** – [GitHub](https://github.com/pratikrathod08)
