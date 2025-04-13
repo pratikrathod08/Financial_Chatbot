@@ -15,20 +15,39 @@ uploaded_files = st.file_uploader(
     type=["pdf", "docx", "doc", "csv", "xlsx", "txt"],
     accept_multiple_files=True
 )
+st.header("🔗 Add a URL (Optional)")
+input_url = st.text_input("Enter a URL to fetch financial data (optional)")
 
-if st.button("Upload Files") and uploaded_files:
-    file_tuples = [("files", (file.name, file, file.type)) for file in uploaded_files]
-    with st.spinner("Uploading files..."):
-        print("File uploading started.")
+# if st.button("Upload Files") and uploaded_files:
+#     file_tuples = [("files", (file.name, file, file.type)) for file in uploaded_files]
+#     with st.spinner("Uploading files..."):
+#         print("File uploading started.")
+#         response = requests.post(
+#             f"{BACKEND_URL}/file/upload/",
+#             files=file_tuples
+#         )
+#         print(response.text)
+#         if response.status_code == 200:
+#             st.success("All files uploaded successfully!")
+#         else:
+#             st.error("Failed to upload files.")
+
+if st.button("Upload Files") and (uploaded_files or input_url):
+    file_tuples = [("files", (file.name, file, file.type)) for file in uploaded_files] if uploaded_files else []
+    data = {"url": input_url} if input_url else {}
+
+    with st.spinner("Uploading files and/or fetching URL..."):
+        print("Upload/URL fetch started.")
         response = requests.post(
             f"{BACKEND_URL}/file/upload/",
-            files=file_tuples
+            files=file_tuples,
+            data=data  # Send the URL as part of form-data
         )
         print(response.text)
         if response.status_code == 200:
-            st.success("All files uploaded successfully!")
+            st.success("Files and/or URL processed successfully!")
         else:
-            st.error("Failed to upload files.")
+            st.error("Failed to process files or URL.")
 
 # Chat Section
 st.header("🗣️ Ask Your Questions")

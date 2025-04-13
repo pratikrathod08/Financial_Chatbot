@@ -5,6 +5,11 @@ python-multipart
 langchain
 langchain-openai
 openai
+requests 
+beautifulsoup4
+html5lib  
+lxml
+pdfplumber
 pypdf
 pypdf2
 python-docx

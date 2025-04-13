@@ -6,6 +6,7 @@ from fastapi import UploadFile
 
 from app.logger import logger
 from app.exception import CustomException
+from app.components.data_extraction import DataExtractor
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -74,4 +75,15 @@ async def save_file_by_type(file: UploadFile):
     except Exception as e: 
         logger.info(f"Exception occure during file write to local storage : {str(e)} ")
         raise CustomException(e, sys)
+    
+async def save_url_files(url: str):
+    data_extractor = DataExtractor()
+    try: 
+        results = data_extractor.extract_url(url)
+        logger.info("Store all files from url successfully ")
+        return results
+    except Exception as e:
+        logger.info("Error occure during url file store")
+        raise CustomException(e, sys)
+    
 

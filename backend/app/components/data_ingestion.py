@@ -84,3 +84,12 @@ class DataIngestion:
         else:
             logger.warning(f"Unsupported file type: {filetype}")
             raise CustomException(f"Unsupported file type: {filetype}", sys)
+        
+    def url_data_ingestion(self, filedata: list):
+        try: 
+            logger.info("Start url data infestion to vector db and sql database")
+            for data in filedata:
+                self.data_ingestion(data)
+            logger.info("Url all data ingestion completed")  
+        except Exception as e: 
+            raise CustomException(e, sys)

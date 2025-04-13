@@ -89,3 +89,7 @@ streamlit run app.py  ## You will get fronend url from terminal after run app
 
 - Check logs for uploaded files and chat history from `UPLOAD_DIR=app/data/uploads` this path.
 - Also check logs for error and success from log folder inside backend folder.
+
+### Test with url  
+
+`https://en.wikipedia.org/wiki/List_of_largest_daily_changes_in_the_Dow_Jones_Industrial_Average`

@@ -1,8 +1,12 @@
 import os, sys
 import csv
 from datetime import datetime
-
+import requests
+from bs4 import BeautifulSoup
+from io import BytesIO
 import docx
+from docx import Document
+import pdfplumber
 import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
@@ -94,6 +98,61 @@ def extract_text_from_excel(file_path: str):
     except Exception as e: 
         logger.info(f"Exception occure during Extraction of excel {file_path}") 
         raise CustomException(e, sys)
+    
+
+def extract_from_url(url: str):
+        logger.info(f"URL extraction started: {url}")
+        result = {}
+        try:
+            response = requests.get(url)
+            content_type = response.headers.get("Content-Type", "")
+
+            if "text/html" in content_type:
+                logger.info("Processing HTML content")
+                soup = BeautifulSoup(response.content, "lxml")
+                page_text = soup.get_text(separator="\n", strip=True)
+                tables = pd.read_html(url)
+                result["text"] = page_text
+                result["tables"] = [df.to_dict(orient="records") for df in tables]
+                # result["tables"] = tables
+                logger.info(f"Extracted text from url : {str(page_text[:100])}")
+                logger.info(f"No of tables extracted from url : {len(tables)}")
+
+            # elif "application/pdf" in content_type:
+            #     logger.info("Processing PDF content")
+            #     with pdfplumber.open(BytesIO(response.content)) as pdf:
+            #         pdf_text = ""
+            #         pdf_tables = []
+            #         for page in pdf.pages:
+            #             pdf_text += page.extract_text() or ""
+            #             tables = page.extract_tables()
+            #             for table in tables:
+            #                 pdf_tables.append(table)
+            #         result["text"] = pdf_text
+            #         result["tables"] = pdf_tables
+
+            # elif "application/vnd.openxmlformats-officedocument.wordprocessingml.document" in content_type:
+            #     logger.info("Processing DOCX content")
+            #     doc = Document(BytesIO(response.content))
+            #     doc_text = "\n".join([p.text for p in doc.paragraphs])
+            #     tables = []
+            #     for table in doc.tables:
+            #         table_data = []
+            #         for row in table.rows:
+            #             table_data.append([cell.text.strip() for cell in row.cells])
+            #         tables.append(table_data)
+            #     result["text"] = doc_text
+            #     result["tables"] = tables
+
+            else:
+                logger.warning(f"Unsupported content type: {content_type}")
+                raise ValueError(f"Unsupported content type: {content_type}")
+
+        except Exception as e:
+            logger.error(f"Error fetching or processing URL: {e}")
+            raise ValueError(f"Error fetching or processing URL: {e}")
+
+        return result
 
 
 
