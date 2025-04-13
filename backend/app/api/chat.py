@@ -4,6 +4,7 @@ from langchain_core.messages import ToolMessage, HumanMessage
 
 from app.schemas.chat_schema import AskRequest
 from app.agent.agent_graph import graph, config
+from app.agent.openai_agent import agent
 from app.logger import logger 
 from app.exception import CustomException
 from app.models.models import ChatHistory
@@ -27,12 +28,14 @@ async def ask_files(request: AskRequest):
             config=config
         )
         response_text = final_state["messages"][-1].content
+
+        # response_text = agent.run(request.query)
         logger.info(f"Answer of user query : {response_text}")
 
         # ✅ Log to CSV
         log_chat_to_csv(request.query, response_text)
 
-        logger.info(f"Answer of user query : {final_state['messages'][-1].content}")
+        logger.info(f"Answer of user query : {response_text}")
         return {"result": response_text}
     
     except Exception as e:

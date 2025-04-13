@@ -7,7 +7,7 @@ from app.agent.vector_tool import lookup_vectordb
 from app.exception import CustomException
 from app.logger import logger
 
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
 tools = [lookup_vectordb, query_sqldb]
 try: 
     logger.info("Open ai agent building started")    
